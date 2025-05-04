@@ -12,29 +12,48 @@ export default function ApiResponse({
 }: ApiResponseProps) {
   // デフォルトのレスポンスデータ（データが提供されていない場合に表示）
   const defaultData = {
-    abilities: [
+    total: 100,
+    monsters: [
       {
-        ability: {
-          name: "limber",
-          url: "https://mh-api.com/v1/v2/ability/7/",
-        },
-        is_hidden: false,
-        slot: 1,
-      },
-      {
-        ability: {
-          name: "imposter",
-          url: "https://mh-api.com/v1/v2/ability/150/",
-        },
-        is_hidden: true,
-        slot: 3,
+        monster_id: "1",
+        name: "リオレイア",
+        another_name: "雌火竜",
+        category: "飛竜種",
+        title: [
+          "MH",
+          "MHG",
+          "MHP",
+          "MH2",
+          "P2nd",
+          "P2G",
+          "P3rd",
+          "MH3G",
+          "MH3",
+          "MH4",
+          "MH4G",
+          "MHX",
+          "MHXX",
+          "MHW",
+          "MHWI",
+          "MHR",
+          "MHRS",
+        ],
+        ranking: [
+          {
+            ranking: "78",
+            vote_year: "2024",
+          },
+        ],
+        image_url:
+          "https://raw.githubusercontent.com/o-ga09/MH-API/main/data/monster/1.png",
+        bgm: [
+          {
+            name: "太古の律動/リオレイア",
+            url: "https://www.youtube.com/watch?v=jLgjOfT_elA",
+          },
+        ],
       },
     ],
-    base_experience: 101,
-    cries: {
-      latest:
-        "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/132.ogg",
-    },
   };
 
   const displayData = data || defaultData;
