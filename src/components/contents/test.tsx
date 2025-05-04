@@ -1,11 +1,42 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
-import { CopyIcon, CheckIcon } from "lucide-react";
+import { CopyIcon, CheckIcon, Plus, X } from "lucide-react";
 import Link from "next/link";
 import ApiResponse from "../demo/apiResponese";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+
+// クエリパラメータの型定義
+interface QueryParam {
+  name: string;
+  value: string;
+}
+
+// 利用可能なパラメータ情報
+interface ParamInfo {
+  name: string;
+  type: string;
+  description: string;
+}
+
+// エンドポイントごとの利用可能なパラメータ
+const availableParams: Record<string, ParamInfo[]> = {
+  monsters: [
+    { name: "MonsterIds", type: "string", description: "モンスターID" },
+    { name: "MonsterName", type: "string", description: "モンスター名" },
+    { name: "limit", type: "integer", description: "取得件数" },
+    { name: "offset", type: "integer", description: "取得開始位置" },
+    { name: "sort", type: "string", description: "ソート順" },
+  ],
+  "monsters/:monsterid": [
+    {
+      name: "monsterid",
+      type: "string",
+      description: "モンスターID (パスパラメータ)",
+    },
+  ],
+};
 
 export const Test = () => {
   const baseUrl = "https://api.mh-api.com/v1/"; // モンスターハンターAPIのURL
@@ -14,6 +45,12 @@ export const Test = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // クエリパラメータ関連の状態
+  const [queryParams, setQueryParams] = useState<QueryParam[]>([]);
+  const [currentParam, setCurrentParam] = useState<string>("");
+  const [currentValue, setCurrentValue] = useState<string>("");
+  const [showParamPanel, setShowParamPanel] = useState(false);
 
   // コピーの状態をリセットするタイマー
   useEffect(() => {
@@ -25,13 +62,38 @@ export const Test = () => {
     }
   }, [copied]);
 
+  // エンドポイント変更時にクエリパラメータをリセット
+  useEffect(() => {
+    setQueryParams([]);
+  }, [endpoint]);
+
+  // URLを作成する関数
+  const getFullUrl = () => {
+    let url = `${baseUrl}${endpoint}`;
+
+    if (queryParams.length > 0) {
+      url += "?";
+      const queryString = queryParams
+        .map(
+          (param) =>
+            `${encodeURIComponent(param.name)}=${encodeURIComponent(
+              param.value
+            )}`
+        )
+        .join("&");
+      url += queryString;
+    }
+
+    return url;
+  };
+
   // APIリクエストを送信する関数
   const fetchApiData = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(`${baseUrl}${endpoint}`);
+      const response = await fetch(getFullUrl());
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -44,16 +106,10 @@ export const Test = () => {
     }
   };
 
-  // ヒントリンクをクリックしたときのハンドラ
-  const handleHintClick = (hint: string) => (e: React.MouseEvent) => {
-    e.preventDefault();
-    setEndpoint(hint);
-  };
-
   // URLをクリップボードにコピーする関数
   const copyToClipboard = () => {
     navigator.clipboard
-      .writeText(`${baseUrl}${endpoint}`)
+      .writeText(getFullUrl())
       .then(() => {
         setCopied(true);
       })
@@ -68,6 +124,32 @@ export const Test = () => {
     fetchApiData();
   };
 
+  // クエリパラメータを追加する関数
+  const addQueryParam = () => {
+    if (currentParam && currentValue) {
+      setQueryParams([
+        ...queryParams,
+        { name: currentParam, value: currentValue },
+      ]);
+      setCurrentParam("");
+      setCurrentValue("");
+    }
+  };
+
+  // クエリパラメータを削除する関数
+  const removeQueryParam = (index: number) => {
+    const newParams = [...queryParams];
+    newParams.splice(index, 1);
+    setQueryParams(newParams);
+  };
+
+  // エンドポイントに対応するパラメータリストを取得
+  const getCurrentEndpointParams = () => {
+    // monsters/:monsteridのような形式の場合はmonstersの部分だけ取り出す
+    const baseEndpoint = endpoint.split("/")[0];
+    return availableParams[baseEndpoint] || [];
+  };
+
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4 max-w-3xl">
@@ -76,7 +158,7 @@ export const Test = () => {
         </h2>
 
         <form onSubmit={handleSubmit} className="mb-6">
-          <div className="flex items-center">
+          <div className="flex items-center mb-4">
             <div className="flex-1 flex items-center">
               <Input
                 type="text"
@@ -111,55 +193,106 @@ export const Test = () => {
               {isLoading ? "送信中..." : "送信"}
             </Button>
           </div>
-        </form>
 
-        <div className="text-sm mb-6">
-          <p>
-            ヒントが必要ですか？こちらを試してみてください:
-            <Link
-              href="#"
-              className="text-blue-500 hover:underline mx-1"
-              onClick={handleHintClick("monsters")}
+          {/* クエリパラメータの表示 */}
+          {queryParams.length > 0 && (
+            <div className="mb-4 p-3 bg-gray-50 rounded-md">
+              <h3 className="text-sm font-medium mb-2">クエリパラメータ</h3>
+              <div className="flex flex-wrap gap-2">
+                {queryParams.map((param, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center bg-gray-100 rounded px-2 py-1 text-sm"
+                  >
+                    <span>
+                      {param.name}={param.value}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeQueryParam(index)}
+                      className="ml-1 text-gray-500 hover:text-red-500"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* クエリパラメータ追加パネル */}
+          <div className="mb-4">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setShowParamPanel(!showParamPanel)}
+              className="text-sm"
             >
-              monsters
-            </Link>
-            ,
-            <Link
-              href="#"
-              className="text-blue-500 hover:underline mx-1"
-              onClick={handleHintClick("weapons/great-sword")}
-            >
-              weapons/great-sword
-            </Link>
-            ,
-            <Link
-              href="#"
-              className="text-blue-500 hover:underline mx-1"
-              onClick={handleHintClick("locations/ancient-forest")}
-            >
-              locations/ancient-forest
-            </Link>
-            ,
-            <Link
-              href="#"
-              className="text-blue-500 hover:underline mx-1"
-              onClick={handleHintClick("items/potion")}
-            >
-              items/potion
-            </Link>
-          </p>
-        </div>
+              {showParamPanel
+                ? "パラメータパネルを閉じる"
+                : "クエリパラメータを追加"}
+            </Button>
+
+            {showParamPanel && (
+              <div className="mt-2 p-3 border rounded-md">
+                <div className="mb-3">
+                  <p className="text-sm text-gray-600 mb-2">
+                    利用可能なパラメータ:
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {getCurrentEndpointParams().map((param, index) => (
+                      <div
+                        key={index}
+                        className="text-xs bg-blue-100 text-blue-800 rounded px-2 py-1 cursor-pointer hover:bg-blue-200"
+                        onClick={() => setCurrentParam(param.name)}
+                        title={param.description}
+                      >
+                        {param.name} ({param.type})
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex space-x-2">
+                  <Input
+                    type="text"
+                    placeholder="パラメータ名"
+                    value={currentParam}
+                    onChange={(e) => setCurrentParam(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Input
+                    type="text"
+                    placeholder="値"
+                    value={currentValue}
+                    onChange={(e) => setCurrentValue(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Button
+                    type="button"
+                    onClick={addQueryParam}
+                    disabled={!currentParam || !currentValue}
+                    className="bg-green-500 hover:bg-green-600"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </form>
 
         <div className="mb-6">
           <p className="font-medium mb-2">
-            直接リンク:
+            完全なURL:
             <Link
-              href={`${baseUrl}`}
+              href={getFullUrl()}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-500 hover:underline ml-1"
             >
-              {baseUrl}
+              {getFullUrl()}
             </Link>
           </p>
         </div>

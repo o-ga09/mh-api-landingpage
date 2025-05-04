@@ -6,15 +6,14 @@ export const Hero = () => {
       <div className="container mx-auto px-4">
         <Image
           src="/logo.webp?height=100&width=240"
-          alt="PokeAPI Logo"
+          alt="Monster Hunter API Logo"
           width={240}
           height={100}
           className="mx-auto mb-6"
         />
-        <h1 className="text-3xl font-bold mb-2">The RESTful Pokémon API</h1>
-        <p className="text-xl">
-          毎月<span className="font-bold">10億</span>以上のAPIコールを処理！
-        </p>
+        <h1 className="text-3xl font-bold mb-2">
+          The RESTful Monster Hunter API
+        </h1>
       </div>
     </section>
   );
