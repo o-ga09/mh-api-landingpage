@@ -5,6 +5,7 @@ import { Footer } from "@/components/layout/footer";
 import { APP_URL } from "@/lib/constant";
 import type { Metadata } from "next";
 import GoogleAnalytics from "@/components/googleanalytics";
+import { GoogleAdsense } from "@/components/googleAdsense";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -99,8 +100,9 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
-        <GoogleAnalytics />
       </body>
+      <GoogleAnalytics />
+      <GoogleAdsense />
     </html>
   );
 }
