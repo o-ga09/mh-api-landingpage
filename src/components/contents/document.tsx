@@ -87,7 +87,7 @@ export default function Document() {
         "モンスターを検索して、条件に合致するモンスターを1件取得する",
       parameters: [
         {
-          name: "request",
+          name: "MonsterId",
           type: "string",
           in: "path",
           description: "モンスターID",
@@ -153,27 +153,42 @@ export default function Document() {
           type: "string",
           description: "モンスターのカテゴリ",
         },
+        {
+          name: "ranking",
+          type: "array<Object>",
+          description: "モンスター総選挙の順位",
+        },
+        {
+          name: "title",
+          type: "array<string>",
+          description: "登場作品",
+        },
         { name: "image_url", type: "string", description: "モンスター画像URL" },
         {
-          name: "first_weak_attack",
-          type: "string",
-          description: "最有効弱点",
+          name: "bgm",
+          type: "array<Object>",
+          description: "モンスターのBGM",
         },
-        {
-          name: "second_weak_attack",
-          type: "string",
-          description: "2番目に有効な弱点",
-        },
-        {
-          name: "first_weak_element",
-          type: "string",
-          description: "最有効属性",
-        },
-        {
-          name: "second_weak_element",
-          type: "string",
-          description: "2番目に有効な属性",
-        },
+        // {
+        //   name: "first_weak_attack",
+        //   type: "string",
+        //   description: "最有効弱点",
+        // },
+        // {
+        //   name: "second_weak_attack",
+        //   type: "string",
+        //   description: "2番目に有効な弱点",
+        // },
+        // {
+        //   name: "first_weak_element",
+        //   type: "string",
+        //   description: "最有効属性",
+        // },
+        // {
+        //   name: "second_weak_element",
+        //   type: "string",
+        //   description: "2番目に有効な属性",
+        // },
       ] as SchemaProperty[],
     },
     // item: {

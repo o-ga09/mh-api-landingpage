@@ -92,7 +92,7 @@ export default function Document() {
         "Search for a monster and retrieve a single monster matching the criteria",
       parameters: [
         {
-          name: "request",
+          name: "MonsterId",
           type: "string",
           in: "path",
           description: "Monster ID",
@@ -162,27 +162,42 @@ export default function Document() {
           type: "string",
           description: "Monster category",
         },
+        {
+          name: "ranking",
+          type: "array<Object>",
+          description: "モンスター総選挙の順位",
+        },
+        {
+          name: "title",
+          type: "array<string>",
+          description: "登場作品",
+        },
         { name: "image_url", type: "string", description: "Monster image URL" },
         {
-          name: "first_weak_attack",
-          type: "string",
-          description: "Most effective weakness",
+          name: "bgm",
+          type: "array<Object>",
+          description: "モンスターのBGM",
         },
-        {
-          name: "second_weak_attack",
-          type: "string",
-          description: "Second most effective weakness",
-        },
-        {
-          name: "first_weak_element",
-          type: "string",
-          description: "Most effective element",
-        },
-        {
-          name: "second_weak_element",
-          type: "string",
-          description: "Second most effective element",
-        },
+        // {
+        //   name: "first_weak_attack",
+        //   type: "string",
+        //   description: "Most effective weakness",
+        // },
+        // {
+        //   name: "second_weak_attack",
+        //   type: "string",
+        //   description: "Second most effective weakness",
+        // },
+        // {
+        //   name: "first_weak_element",
+        //   type: "string",
+        //   description: "Most effective element",
+        // },
+        // {
+        //   name: "second_weak_element",
+        //   type: "string",
+        //   description: "Second most effective element",
+        // },
       ] as SchemaProperty[],
     },
     // item: {
