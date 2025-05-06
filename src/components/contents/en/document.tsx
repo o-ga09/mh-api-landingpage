@@ -92,7 +92,7 @@ export default function Document() {
         "Search for a monster and retrieve a single monster matching the criteria",
       parameters: [
         {
-          name: "MonsterId",
+          name: "monsterid",
           type: "string",
           in: "path",
           description: "Monster ID",

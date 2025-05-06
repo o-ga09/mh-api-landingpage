@@ -87,7 +87,7 @@ export default function Document() {
         "モンスターを検索して、条件に合致するモンスターを1件取得する",
       parameters: [
         {
-          name: "MonsterId",
+          name: "monsterid",
           type: "string",
           in: "path",
           description: "モンスターID",
