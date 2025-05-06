@@ -33,11 +33,13 @@ export const Header = () => {
   const homeLink = isEnglish ? "/en" : "/";
   const aboutLink = isEnglish ? "/en/about" : "/about";
   const documentLink = isEnglish ? "/en/document" : "/document";
+  const changelogLink = isEnglish ? "/en/changelog" : "/changelog";
 
   // ナビゲーションリンクのラベル
   const homeLabel = isEnglish ? "Home" : "ホーム";
   const aboutLabel = isEnglish ? "About" : "概要";
   const documentLabel = isEnglish ? "Documentation" : "ドキュメント";
+  const changelogLabel = isEnglish ? "Changelog" : "更新履歴";
   const languageLabel = isEnglish ? "日本語" : "English";
 
   return (
@@ -81,6 +83,16 @@ export const Header = () => {
             } transition-colors`}
           >
             {documentLabel}
+          </Link>
+          <Link
+            href={changelogLink}
+            className={`px-4 py-2 ${
+              pathname.includes("/changelog")
+                ? "bg-red-600"
+                : "hover:bg-red-600"
+            } transition-colors`}
+          >
+            {changelogLabel}
           </Link>
           <Link
             href={getAlternateLanguagePath()}

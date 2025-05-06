@@ -21,6 +21,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: "https://mh-api.com/changelog",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
       url: "https://mh-api.com/en",
       lastModified: new Date(),
       changeFrequency: "daily",
@@ -37,6 +43,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
+    },
+    {
+      url: "https://mh-api.com/en/changelog",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
     },
   ];
 }
