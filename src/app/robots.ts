@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/", "/_next/", "/static/"],
     },
-    sitemap: "https://tavinikkiy.com/sitemap.xml",
+    sitemap: "https://mh-api.com/sitemap.xml",
   };
 }
